@@ -22,4 +22,3 @@ workflows:
       email:
         recipients:
           - zhaozheng982@gmail.com
-        on_failure: true
