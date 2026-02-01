@@ -12,10 +12,18 @@ workflows:
     scripts:
       - name: Get Flutter dependencies
         script: flutter pub get
-      - name: Build IPA
+      - name: Build and Package IPA
         script: |
-          # 核心指令：强制生成 ipa 且跳过签名
+          # 1. 运行构建命令（它会生成 .xcarchive，但跳过 ipa 导出）
           flutter build ipa --release --no-codesign
+          
+          # 2. 手动创建 Payload 结构（在 Mac 环境下操作，保留符号链接）
+          mkdir -p build/ios/ipa/Payload
+          cp -r build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app build/ios/ipa/Payload/
+          
+          # 3. 压缩成标准的 .ipa 文件
+          cd build/ios/ipa
+          zip -r juhemusic.ipa Payload
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
