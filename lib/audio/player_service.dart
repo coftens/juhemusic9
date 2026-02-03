@@ -721,8 +721,8 @@ class PlayerService extends ChangeNotifier {
   Future<void> seek(Duration d) async {
     if (_player == null) return;
     await _player!.seek(d);
-    _savedPosition = d;
-    notifyListeners();
+    // 移除手动 notifyListeners，依赖 positionStream/playerStateStream 更新
+    // 以解决 iOS 端 Seek 后 UI/歌词跑在音频前面的问题 (AV Sync)
     _schedulePersist();
   }
 
